@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Visualizador de Celular</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: barra de ferramentas no topo, palco central com a moldura do aparelho escalada para caber. */
+:root{--bg:#f1f2f4;--bar:#ffffff;--ink:#16181d;--mute:#5d6470;--line:#d9dce1;--acc:#0b7a4b;--on:#fff;--stage:#e4e6ea;--shadow:0 20px 50px rgba(10,14,20,.28);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1013;--bar:#16191e;--ink:#eceef1;--mute:#98a0ac;--line:#262a31;--acc:#39d98a;--on:#04170d;--stage:#0a0b0d;--shadow:0 20px 50px rgba(0,0,0,.6);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1013;--bar:#16191e;--ink:#eceef1;--mute:#98a0ac;--line:#262a31;--acc:#39d98a;--on:#04170d;--stage:#0a0b0d;--shadow:0 20px 50px rgba(0,0,0,.6);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.4 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+.bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;padding:12px max(16px,env(safe-area-inset-left,0px));background:var(--bar);border-bottom:1px solid var(--line)}
+.bar label{display:grid;gap:4px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);font-weight:500}
+select,input,button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:38px}
+select{min-width:210px;max-width:100%}
+input[type=number]{width:78px}
+button{cursor:pointer;font-weight:500}
+button:hover{border-color:var(--mute)}
+button.pri{background:var(--acc);border-color:var(--acc);color:var(--on)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.sz{display:flex;gap:6px;align-items:center}
+.sz span{color:var(--mute)}
+.sz[hidden]{display:none}
+.info{margin-left:auto;color:var(--mute);font-size:13px;min-width:0}
+.info b{color:var(--ink);font-weight:600}
+.stage{flex:1;min-height:0;overflow:auto;background:var(--stage);display:grid;place-items:center;padding:20px}
+.slot{position:relative;flex:none}
+.dev{position:absolute;left:0;top:0;transform-origin:0 0;background:#0b0c0e;box-shadow:var(--shadow),inset 0 0 0 2px #2a2d33}
+.scr{position:relative;overflow:hidden;background:#000}
+.sbar{position:relative;display:flex;justify-content:space-between;align-items:center;padding:0 18px;color:#fff;font:500 12px/1 Inter,system-ui,sans-serif;background:#000;z-index:2}
+.sbar i{display:inline-flex;gap:5px;align-items:center;font-style:normal}
+.bat{display:inline-block;width:20px;height:10px;border:1.5px solid #fff;border-radius:3px;position:relative}
+.bat::before{content:"";position:absolute;inset:1.5px;right:5px;background:#fff;border-radius:1px}
+.bat::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:#fff;border-radius:0 1px 1px 0}
+.sig{display:inline-flex;gap:1.5px;align-items:flex-end;height:10px}
+.sig u{display:block;width:3px;background:#fff;border-radius:1px;text-decoration:none}
+iframe{display:block;border:0;background:#000}
+.cut{position:absolute;background:#000;z-index:3}
+.drop{left:50%;top:0;width:46px;height:22px;margin-left:-23px;border-radius:0 0 23px 23px}
+.punch{left:50%;top:8px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;box-shadow:0 0 0 2px #15171b}
+.notch{left:50%;top:0;width:150px;height:30px;margin-left:-75px;border-radius:0 0 18px 18px}
+.island{left:50%;top:9px;width:96px;height:28px;margin-left:-48px;border-radius:20px}
+.pill{position:absolute;left:50%;bottom:7px;width:120px;height:4px;margin-left:-60px;border-radius:3px;background:#ffffffcc;z-index:3;pointer-events:none}
+.hbtn{position:absolute;left:50%;bottom:11px;width:44px;height:44px;margin-left:-22px;border-radius:50%;border:2px solid #3a3d44}
+.spk{position:absolute;left:50%;top:22px;width:56px;height:6px;margin-left:-28px;border-radius:4px;background:#25282d}
+.cam{position:absolute;left:50%;top:8px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#1c1f24}
+.btop{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;background:#23262b}
+.btop s{display:block;width:11px;height:11px;border-radius:50%;background:#555a63;text-decoration:none}
+.url{flex:1;margin-left:10px;height:24px;border-radius:12px;background:#15171b;color:#9aa1ad;font:400 12px/24px Inter,sans-serif;padding:0 12px;overflow:hidden;white-space:nowrap}
+.hint{color:var(--mute);font-size:12px;padding:8px 16px;border-top:1px solid var(--line);background:var(--bar)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <label for="dev">Aparelho<select id="dev"></select></label>
+  <div class="sz" id="szbox" hidden><label for="cw">Largura<input id="cw" type="number" min="200" max="2000" value="393"></label><span>×</span><label for="ch">Altura<input id="ch" type="number" min="200" max="2000" value="851"></label></div>
+  <label for="zoom">Zoom<select id="zoom" style="min-width:110px"><option value="fit">Ajustar</option><option value="1">100%</option><option value="0.75">75%</option><option value="0.5">50%</option></select></label>
+  <button id="rot" type="button" aria-label="Girar aparelho">⟳ Girar</button>
+  <button id="rel" type="button" class="pri">Recarregar</button>
+  <div class="info" id="info"></div>
+</div>
+<div class="stage" id="stage"><div class="slot" id="slot"></div></div>
+<div class="hint">As medidas são o tamanho real da tela em pixels CSS, o mesmo que o modo responsivo do navegador usa. O app abaixo é o de verdade e responde ao toque do mouse.</div>
+<script>
+(function(){
+  var SRC="index.html";
+  // w,h = área do app em px CSS (sem a barra de status). bz = [topo, lados, base] da moldura. k = tipo de moldura.
+  var D=[
+    {id:'rn8',g:'Xiaomi',n:'Redmi Note 8',w:393,h:851,dpr:2.75,pol:'6,3"',cut:'drop',bz:[14,8,16],r:34,sb:28},
+    {id:'rn8p',g:'Xiaomi',n:'Redmi Note 8 Pro',w:393,h:851,dpr:2.75,pol:'6,53"',cut:'punch',bz:[14,8,16],r:34,sb:28},
+    {id:'s20',g:'Samsung',n:'Galaxy S20',w:360,h:800,dpr:3,pol:'6,2"',cut:'punch',bz:[10,6,12],r:36,sb:28},
+    {id:'s20u',g:'Samsung',n:'Galaxy S20 Ultra',w:412,h:915,dpr:3.5,pol:'6,9"',cut:'punch',bz:[10,6,12],r:36,sb:28},
+    {id:'fold',g:'Samsung',n:'Galaxy Fold (fechado)',w:280,h:653,dpr:3,pol:'4,6"',cut:'none',bz:[14,10,14],r:22,sb:24},
+    {id:'px7',g:'Google',n:'Pixel 7',w:412,h:915,dpr:2.6,pol:'6,3"',cut:'punch',bz:[10,6,12],r:34,sb:28},
+    {id:'se',g:'Apple',n:'iPhone SE',w:375,h:667,dpr:2,pol:'4,7"',cut:'btn',bz:[60,14,76],r:6,sb:20},
+    {id:'ip14',g:'Apple',n:'iPhone 14',w:390,h:844,dpr:3,pol:'6,1"',cut:'notch',bz:[10,10,10],r:48,sb:47,bar:1},
+    {id:'ip15p',g:'Apple',n:'iPhone 15 Pro',w:393,h:852,dpr:3,pol:'6,1"',cut:'island',bz:[10,10,10],r:50,sb:54,bar:1},
+    {id:'ip14pm',g:'Apple',n:'iPhone 14 Pro Max',w:430,h:932,dpr:3,pol:'6,7"',cut:'island',bz:[10,10,10],r:52,sb:54,bar:1},
+    {id:'ipad',g:'Tablet',n:'iPad Mini',w:768,h:1024,dpr:2,pol:'8,3"',cut:'cam',bz:[26,22,26],r:26,sb:0},
+    {id:'nb',g:'Web',n:'Notebook 1280 × 720',w:1280,h:720,dpr:1,pol:'',cut:'browser',bz:[0,0,0],r:10,sb:0},
+    {id:'cust',g:'Web',n:'Tamanho personalizado',w:393,h:851,dpr:1,pol:'',cut:'none',bz:[12,12,12],r:24,sb:0}
+  ];
+  var $=function(i){return document.getElementById(i)},sel=$('dev'),st={id:'rn8',rot:false,zoom:'fit',cw:393,ch:851};
+  try{var sv=JSON.parse(localStorage.getItem('pv-state'));if(sv&&D.some(function(d){return d.id===sv.id}))st=Object.assign(st,sv)}catch(e){}
+  var gs=[];D.forEach(function(d){if(gs.indexOf(d.g)<0)gs.push(d.g)});
+  sel.innerHTML=gs.map(function(g){return '<optgroup label="'+g+'">'+D.filter(function(d){return d.g===g}).map(function(d){return '<option value="'+d.id+'">'+d.n+'</option>'}).join('')+'</optgroup>'}).join('');
+  function save(){try{localStorage.setItem('pv-state',JSON.stringify(st))}catch(e){}}
+  function now(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+  function build(){
+    var d=D.find(function(x){return x.id===st.id}),W=d.w,H=d.h;
+    if(d.id==='cust'){W=+st.cw||393;H=+st.ch||851}
+    var rot=st.rot&&d.cut!=='browser';if(rot){var t=W;W=H;H=t}
+    var sb=rot?0:d.sb,bz=d.bz.slice();
+    if(rot){bz=[bz[1],bz[0]+2,bz[1]]; if(d.cut==='btn')bz=[14,60,14]}
+    var fw=W+bz[1]*2,fh=(d.cut==='browser'?38:sb)+H+bz[0]+bz[2];
+    var cut='',sbar='',inner='';
+    if(!rot){
+      if(d.cut==='drop')cut='<i class="cut drop"></i>';
+      if(d.cut==='punch')cut='<i class="cut punch"></i>';
+      if(d.cut==='notch')cut='<i class="cut notch"></i>';
+      if(d.cut==='island')cut='<i class="cut island"></i>';
+    }
+    if(sb)sbar='<div class="sbar" style="height:'+sb+'px;'+(d.cut==='notch'||d.cut==='island'?'padding:0 28px;align-items:flex-end;padding-bottom:6px':'')+'"><span>'+now()+'</span><i><span class="sig"><u style="height:4px"></u><u style="height:6px"></u><u style="height:8px"></u><u style="height:10px"></u></span> 4G <span class="bat"></span></i></div>';
+    var topbar=d.cut==='browser'?'<div class="btop"><s></s><s></s><s></s><div class="url">localhost / mapa-da-vida</div></div>':'';
+    var extra='';
+    if(d.cut==='btn'&&!rot)extra='<div class="spk"></div><div class="hbtn"></div>';
+    if(d.cut==='cam'&&!rot)extra='<div class="cam"></div>';
+    var bar=d.bar&&!rot?'<div class="pill"></div>':'';
+    var dev='<div class="dev" id="dev0" style="width:'+fw+'px;height:'+fh+'px;padding:'+bz[0]+'px '+bz[1]+'px '+bz[2]+'px;border-radius:'+(d.cut==='browser'?d.r:d.r+Math.max.apply(null,bz)*.6)+'px">'+extra+
+      '<div class="scr" style="width:'+W+'px;height:'+(fh-bz[0]-bz[2])+'px;border-radius:'+d.r+'px">'+cut+topbar+sbar+'<iframe id="app" title="App" src="'+SRC+'" style="width:'+W+'px;height:'+H+'px"></iframe>'+bar+'</div></div>';
+    $('slot').innerHTML=dev;$('slot').dataset.w=fw;$('slot').dataset.h=fh;
+    $('szbox').hidden=d.id!=='cust';
+    $('info').innerHTML='<b>'+W+' × '+H+'</b> px'+(d.dpr>1?' · DPR '+String(d.dpr).replace('.',','):'')+(d.pol?' · tela '+d.pol:'')+(d.g!=='Web'&&d.g!=='Tablet'?' · '+d.g:'');
+    fit();
+  }
+  function fit(){
+    var sl=$('slot'),w=+sl.dataset.w,h=+sl.dataset.h,s=st.zoom==='fit'?Math.min(1,($('stage').clientWidth-40)/w,($('stage').clientHeight-40)/h):+st.zoom;
+    if(!(s>0))s=1;sl.style.width=Math.round(w*s)+'px';sl.style.height=Math.round(h*s)+'px';
+    var d0=$('dev0');if(d0)d0.style.transform='scale('+s+')';
+  }
+  sel.value=st.id;$('zoom').value=st.zoom;$('cw').value=st.cw;$('ch').value=st.ch;
+  sel.onchange=function(){st.id=sel.value;st.rot=false;save();build()};
+  $('zoom').onchange=function(){st.zoom=this.value;save();fit()};
+  $('rot').onclick=function(){st.rot=!st.rot;save();build()};
+  $('rel').onclick=function(){var f=$('app');if(f)f.src=SRC};
+  ['cw','ch'].forEach(function(i){$(i).oninput=function(){st[i]=+this.value;save();build()}});
+  addEventListener('resize',fit);
+  build();
+})();
+</script>
+</body>
+</html>

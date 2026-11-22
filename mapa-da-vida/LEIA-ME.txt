@@ -1,0 +1,33 @@
+MAPA DA VIDA v6 (refeito do zero)
+
+COMO ABRIR
+Abra index.html no navegador, ou rode  npm start  (Node.js) para o editor com moldura de celular.
+Seus dados antigos continuam: a chave de armazenamento é a mesma da versão anterior.
+
+COMO O APP ESTÁ ORGANIZADO (5 abas)
+Hoje     alerta vermelho/amarelo, personagem + XP (com o XP que você perde se o dia acabar agora),
+         botão da próxima ação, Contrato de hoje, baú, 4 objetivos (Concurso, Peso, Leitura, Grana), semana.
+Estudo   hub com botão grande de começar. Cronômetro, Foco, Cartões (Anki), Revisões, Questões, Leitura, Tempo, Provas, Matérias.
+Corpo    Treino semanal, Peso (meta de ganhar OU perder, com gráfico) e Hábitos.
+Grana    Visão (alarme + 4 gráficos), Lançamentos, Planejar (tetos, limite, salário, dívidas, metas, contas).
+         Botão + lança um gasto em 2 toques.
+Mais     Lei da Disciplina, Mapa, Conquistas, Metas, Agenda, Tarefas, Mentor, Perfil (backup).
+
+LEI DA DISCIPLINA (core.js)
+ I   Mínimo inegociável: contrato diário (estudo, questões, treino, leitura, hábitos).
+ II  Falhar custa XP: peso da missão x perda do rank x perda do modo.
+ III Nunca falhe duas vezes: 2º dia falho seguido custa x1,5; 3º em diante x2. (Dia falho = menos da metade das missões.)
+ IV  A régua sobe: DIFF[rank] aumenta meta e perda conforme o rank.
+ Modo (Fácil, Normal, Difícil, Insano) em MODES. Subir de modo vale hoje; descer só vale amanhã.
+ Dias anteriores à atualização contam pela regra antiga (nada do seu histórico é reescrito).
+
+ALARME DA GRANA (grana.js, função moneyStatus)
+ VERMELHO: limite do mês estourado, saldo negativo, conta atrasada ou teto de categoria estourado.
+ AMARELO: 80% do limite, projeção do mês acima do limite, categoria a 80% do teto, conta vencendo em 3 dias.
+ Aparece no topo da Grana, na aba (bolinha), na tela Hoje e num aviso ao lançar.
+
+ARQUIVOS
+ core.js    dados, motor de XP (calculado uma vez por mudança), alertas, navegação
+ hoje.js    tela Hoje        estudo.js  Estudo e Leitura     corpo.js  Treino, Peso, Hábitos
+ grana.js   Grana            mais.js    Mais, Lei, Perfil    style.css visual
+ personagens/  arte dos 11 ranks

@@ -1,0 +1,21 @@
+MAPA DA VIDA
+
+COMO MEXER NO CODIGO E VER NO CELULAR
+1. Instale o Node.js uma vez (https://nodejs.org, botao LTS).
+2. Dois cliques em  iniciar.bat  (Windows)  ou rode  npm start  na pasta.
+3. O navegador abre o EDITOR: codigo de um lado, moldura do celular do outro.
+   - Troque o aparelho no menu (Redmi Note 8 ja vem escolhido).
+   - Digitou, o celular atualiza sozinho.
+   - Ctrl+S (ou botao "Salvar no projeto") grava o arquivo na pasta.
+4. Pode tambem editar no VS Code ou outro programa: ao salvar, o app recarrega.
+
+NO CELULAR DE VERDADE
+O terminal mostra um endereco como http://192.168.0.10:5173/
+Abra no celular (mesmo Wi-Fi do computador).
+
+ARQUIVOS
+index.html   estrutura da pagina
+style.css    visual
+app.js       app principal (painel, grana, treino, habitos...)
+estudos.js   aba Estudo (materias, cronometro, graficos, questoes, revisoes)
+dev-server.js, editor.html, iniciar.bat, iniciar.sh   ferramentas de desenvolvimento
