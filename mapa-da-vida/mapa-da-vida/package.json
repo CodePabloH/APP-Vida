@@ -1,7 +1,0 @@
-{
-  "name": "mapa-da-vida",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Mapa da Vida: app de estudos, hábitos e finanças",
-  "scripts": { "start": "node dev-server.js" }
-}
