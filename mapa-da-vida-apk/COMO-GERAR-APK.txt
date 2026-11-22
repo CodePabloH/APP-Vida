@@ -1,0 +1,20 @@
+COMO TRANSFORMAR EM APK (grátis, sem instalar nada no computador)
+
+1. Crie conta grátis em github.com (se ainda não tiver).
+2. Clique em "+" > "New repository". Nome: mapa-da-vida. Marque "Private". Create.
+3. Na tela do repositório clique em "uploading an existing file" e arraste TUDO que está
+   dentro desta pasta (www, android-res, .github, package.json, capacitor.config.json,
+   debug.keystore, .gitignore). Se a pasta .github não subir (arquivos que começam com ponto
+   às vezes são ignorados), use Add file > Create new file, digite o nome
+   .github/workflows/gerar-apk.yml e cole o conteúdo do arquivo gerar-apk.yml. Depois "Commit changes".
+4. Abra a aba "Actions". O build "Gerar APK" começa sozinho (ou clique em Run workflow). Leva ~5 min.
+5. Quando ficar verde, clique nele e, no fim da página, baixe "mapa-da-vida-apk" (vem num .zip com app-debug.apk).
+6. Mande o app-debug.apk para o celular (cabo, Drive, WhatsApp), toque nele e permita
+   "instalar apps desconhecidos". Pronto.
+
+SEUS DADOS
+- Ficam só no celular (armazenamento interno do app). Nada vai para a internet.
+- Desinstalar o app ou "Limpar dados" APAGA tudo. Use Mais > Perfil > Baixar backup de vez em quando
+  (abre o menu de compartilhar: salve no Drive, mande no WhatsApp para você mesmo etc.).
+- Para ATUALIZAR o app: gere um APK novo e instale POR CIMA (sem desinstalar). A chave de
+  assinatura é a mesma, então os dados continuam.
