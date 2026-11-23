@@ -46,8 +46,8 @@ function weekStrip(){const a=[];
 function wonDays(){let won=0,tot=0;const c=C();for(const k in c.days){if(k===dk()||k<S.since)continue;tot++;if(c.days[k].win)won++}return{won,tot}}
 
 V.home=function(){
-  const p=S.prof,c=C(),X=c.X,ri=rank(X),ds=stat(dk()),st=streak(),hr=new Date().getHours(),gr=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite',na=nextAct(ds),A=alerts().slice(0,2),wd=wonDays();
-  const mode=MODES[modeAt(dk())],why=p.why?esc(p.why):QT[Math.floor(Date.now()/864e5)%QT.length];
+  const p=S.prof,c=C(),X=c.X,ri=rank(X),ds=stat(dk()),st=streak(),hr=now5().getHours(),gr=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite',na=nextAct(ds),A=alerts().slice(0,2),wd=wonDays();
+  const mode=MODES[modeAt(dk())],why=p.why?esc(p.why):QT[Math.floor(now5().getTime()/864e5)%QT.length];
   const row=a=>{const dn=a.ok;return `<button class="qr${dn?' ok':''}" onclick="${a.go}"><span class="ic">${a.ic}</span><div class="g"><div class="row"><b>${a.n}</b><small style="margin-left:auto">${Math.min(a.v,a.g)}${a.u?' '+a.u:''} / ${a.g}${a.u?' '+a.u:''}</small></div>${bar(pct(a.v,a.g),dn?'var(--ok)':'')}</div><span class="qx${dn?' ok':''}">${dn?'✓':'−'+ds.perMiss(a)}</span></button>`};
   return `${A.map(a=>`<button class="alert ${a.lv}" onclick="${a.go}"><span>${a.ic}</span><div class="g"><b>${a.t}</b><small>${esc(a.s)}</small></div><i>›</i></button>`).join('')}
   <div class="hud" style="--rc:${RC[ri]}"><div class="top2"><small>${gr}${p.nome?', '+esc(p.nome):''}</small><span class="flame">🔥 ${st} ${st===1?'dia':'dias'}</span></div>

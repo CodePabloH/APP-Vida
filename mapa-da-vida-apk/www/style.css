@@ -238,3 +238,21 @@ button.card{display:block;width:100%;text-align:left}
 .ifx{margin:8px 0 0;padding:8px 10px;border-radius:12px;background:var(--card2);border-left:3px solid var(--acc);font-size:14px}
 .achr{color:inherit}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== VILA ===== */
+.vcard{padding:14px}.vcard .row{align-items:center;gap:12px}.vcard b{font-size:16px}.vcard small{display:block}
+.vmini{font-size:22px;letter-spacing:2px;min-width:40px;line-height:1}
+.vnome{display:block;width:100%;background:transparent;border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:4px 0;margin:4px 0;font-size:20px;font-weight:800;color:var(--ink)}
+.vscene{padding:10px}.vsvg{display:block;width:100%;height:auto}
+.vnew{animation:vpop 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes vpop{50%{transform:scale(1.14)}}
+@media (prefers-reduced-motion:reduce){.vnew{animation:none}}
+.vbig{font-size:38px;line-height:1}
+.vforce{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.vst{margin-top:12px}.vst .row{align-items:center}
+.vbar{display:flex;height:9px;border-radius:99px;overflow:hidden;background:var(--line);margin:5px 0 3px}.vbar i{display:block;flex:none;height:100%}
+.vdot{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.vit{display:grid;justify-items:center;text-align:center;gap:2px;padding:12px 6px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.vit b{font-size:28px;font-weight:400;line-height:1.1}.vit span{font-size:12.5px;font-weight:700}.vit small{font-size:11px;color:var(--mute)}
+.vit.lk b{filter:grayscale(1);opacity:.3}.vit.lk span{color:var(--mute)}

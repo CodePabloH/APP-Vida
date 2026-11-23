@@ -21,7 +21,7 @@ function md(m){
   const all=S.fin.filter(x=>x.d.startsWith(m)),e=all.filter(x=>!x.x),ex=e.filter(x=>x.t==='g'),rp=e.filter(isP),pe=e.filter(x=>!isP(x));
   const r=sum(rp,'r'),g=sum(rp,'g'),pr=sum(pe,'r'),pg=sum(pe,'g'),G=g+pg,by={},perDay=Array(dim(m)).fill(0);
   ex.forEach(x=>{const c=x.c||'Outros';by[c]=(by[c]||0)+x.v;perDay[+x.d.slice(8)-1]+=x.v});
-  const lim=+S.prof.budget||0,late=pe.filter(x=>x.d<dk()),dN=isCur(m)?new Date().getDate():(m<dk().slice(0,7)?dim(m):0);
+  const lim=+S.prof.budget||0,late=pe.filter(x=>x.d<dk()),dN=isCur(m)?now5().getDate():(m<dk().slice(0,7)?dim(m):0);
   return{all,e,r,g,pr,pg,G,by,perDay,lim,late,lateV:late.reduce((t,x)=>t+(x.t==='g'?x.v:0),0),dN,N:dim(m),saldo:r-g,prev:r+pr-g-pg,tg:sum(e,'g')}}
 
 /* ----- ALARME: o coração da tela ----- */
@@ -76,7 +76,7 @@ function paceChart(d,m){
 
 /* ----- GRÁFICO 4: últimos 6 meses ----- */
 function trendChart(){
-  const ms_=[];for(let i=5;i>=0;i--){const t=new Date();t.setDate(1);t.setMonth(t.getMonth()-i);ms_.push(dk(t).slice(0,7))}
+  const ms_=[];for(let i=5;i>=0;i--){const t=now5();t.setDate(1);t.setMonth(t.getMonth()-i);ms_.push(dk(t).slice(0,7))}
   const D=ms_.map(m=>{const e=S.fin.filter(x=>x.d.startsWith(m)&&!x.x&&isP(x));return{m,r:sum(e,'r'),g:sum(e,'g')}});
   if(!D.some(x=>x.r||x.g))return '';
   const mx=Math.max(...D.map(x=>Math.max(x.r,x.g)),1);

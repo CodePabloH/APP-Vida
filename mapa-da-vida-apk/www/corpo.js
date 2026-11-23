@@ -19,8 +19,8 @@ function lineSvg(series,o){
 
 /* ===== TREINO SEMANAL ===== */
 const TIPOS=['Peito e tríceps','Costas e bíceps','Pernas','Ombros','Cardio','Corrida','Descanso'];
-let tsel=new Date().getDay();
-function weekDays(){const t=new Date();t.setHours(0,0,0,0);t.setDate(t.getDate()-t.getDay());return[...Array(7)].map((_,i)=>{const x=new Date(t);x.setDate(t.getDate()+i);return{i,k:dk(x),w:DOW[i]}})}
+let tsel=now5().getDay();
+function weekDays(){const t=now5();t.setHours(0,0,0,0);t.setDate(t.getDate()-t.getDay());return[...Array(7)].map((_,i)=>{const x=new Date(t);x.setDate(t.getDate()+i);return{i,k:dk(x),w:DOW[i]}})}
 function setTP(i,t){S.tplan[i]=t;save();rr()}
 function addTD(k){const m=Math.round(+v('tm'));if(!m)return;S.tr.push({id:uid(),d:k,k:v('tk').trim(),m,i:+v('ti')});save();rr()}
 function setTG(n){S.prof.tgoal=Math.max(1,Math.min(7,(+S.prof.tgoal||4)+n));save();render()}

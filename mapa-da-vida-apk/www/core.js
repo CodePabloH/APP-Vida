@@ -19,7 +19,10 @@ addEventListener('pagehide',flush);document.addEventListener('visibilitychange',
 const $=s=>document.querySelector(s),v=i=>(document.getElementById(i)||{}).value||'';
 const uid=()=>Math.random().toString(36).slice(2,9);
 const pad=n=>String(n).padStart(2,'0');
-const dk=d=>{d=d||new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+/* O DIA VIRA ÀS 5H: de 00:00 até 04:59 ainda conta como o dia anterior. Para mudar, troque o 5 abaixo. */
+const VIRADA=5;
+const now5=()=>new Date(Date.now()-VIRADA*36e5);
+const dk=d=>{d=d||now5();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
 const addD=(k,n)=>{const d=new Date(k+'T00:00');d.setDate(d.getDate()+n);return dk(d)};
 const left=k=>Math.round((new Date(k+'T00:00')-new Date(dk()+'T00:00'))/864e5);
 const hm=m=>m>=60?Math.floor(m/60)+'h'+(m%60?pad(m%60):''):m+'min';
@@ -109,7 +112,7 @@ const MS={3:50,7:150,14:300,30:700,60:1500};
 
 /* ===== ALERTAS (o app te avisa antes de você se perder) ===== */
 function alerts(){
-  const A=[],ds=stat(dk()),h=new Date().getHours(),c=C();
+  const A=[],ds=stat(dk()),h=now5().getHours(),c=C();
   const ms=typeof moneyStatus==='function'?moneyStatus(dk().slice(0,7)):null;
   if(ms&&ms.lv==='red')A.push({lv:'red',ic:'🚨',t:'Grana no vermelho',s:ms.items[0].t,go:"ms='v';go('money')"});
   else if(ms&&ms.lv==='yel')A.push({lv:'yel',ic:'⚠️',t:'Atenção com os gastos',s:ms.items[0].t,go:"ms='v';go('money')"});
@@ -217,6 +220,7 @@ function render(){
   else{
     const d=c.gross-S.lg;if(d!==0){S.lg=c.gross;flush()}
     if(r>S.lr){S.lr=r;flush();levelUp(r)}else if(P.ms)toast(P.ms,'big');else if(d>0)toast('+'+d+' XP')}
+  if(typeof vilaCheck==='function')vilaCheck();
   P.nw.slice(0,3).forEach((a,i)=>setTimeout(()=>toast(a[1]+' '+a[2]+' +'+a[5]+' XP','ach'),500+i*2300));
   requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.xb[data-p]').forEach(e=>e.style.setProperty('--p',e.dataset.p+'%'))));
   /* aviso de XP perdido ontem */
@@ -224,7 +228,7 @@ function render(){
     if(yk>=S.since){const yl=stat(yk).loss;if(yl>0){const b=c.net,fl=c.floor,eff=Math.max(b+yl,fl)-Math.max(b,fl);
       if(eff>0)setTimeout(()=>{toast('−'+nf(eff)+' XP por ontem','bad');document.querySelectorAll('.hi').forEach(h=>h.classList.add('hit'))},600)}}}
 }
-$('#date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
+$('#date').textContent=now5().toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
 setInterval(()=>{if(document.hidden)return;document.querySelectorAll('.clk').forEach(c=>c.textContent=clock(elapsed()))},500);
 window.addEventListener('DOMContentLoaded',()=>render());
 const elapsed=()=>S.timer.acc+(S.timer.run?(Date.now()-S.timer.start)/1000:0);

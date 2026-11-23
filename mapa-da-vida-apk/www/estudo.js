@@ -66,7 +66,7 @@ function newTop(c){const n=v('nt_'+c).trim(),m=mat(S.sel[c].m);if(!n||!m)return;
 
 /* ===== PERÍODO (Dia, Semana, Mês, Ano, Total, Datas) ===== */
 function prange(){
-  const t=new Date();t.setHours(0,0,0,0);let a,b,lb;
+  const t=now5();t.setHours(0,0,0,0);let a,b,lb;
   if(pf.k==='d'){const d=new Date(t);d.setDate(d.getDate()+pf.o);a=b=dk(d);lb=pf.o===0?'Hoje':pf.o===-1?'Ontem':fd(a)}
   else if(pf.k==='w'){const d=new Date(t);d.setDate(d.getDate()-d.getDay()+7*pf.o);const e=new Date(d);e.setDate(d.getDate()+6);a=dk(d);b=dk(e);lb=pf.o===0?'Esta semana':fd(a).slice(0,5)+' a '+fd(b).slice(0,5)}
   else if(pf.k==='m'){const d=new Date(t.getFullYear(),t.getMonth()+pf.o,1);a=dk(d);b=dk(new Date(d.getFullYear(),d.getMonth()+1,0));lb=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});lb=lb[0].toUpperCase()+lb.slice(1)}
@@ -334,7 +334,7 @@ function kAns(g){
   kst.n++;if(g>=2){kst.ok++;kst.combo++;kst.best=Math.max(kst.best,kst.combo)}else if(g===0)kst.combo=0;
   c.ez=r.ez;c.last=dk();
   if(g===0){c.lp=(c.lp||0)+1;c.iv=0;c.rp=0;c.due=dk();kq.push(kq.shift())}
-  else{c.iv=r.iv;c.rp=(c.rp||0)+1;const d=new Date();d.setDate(d.getDate()+r.iv);c.due=dk(d);kq.shift()}
+  else{c.iv=r.iv;c.rp=(c.rp||0)+1;const d=now5();d.setDate(d.getDate()+r.iv);c.due=dk(d);kq.shift()}
   const x=[1,2,3,4][g]+(g>=2?Math.min(5,Math.floor(kst.combo/3)):0);
   S.bonus=(S.bonus||0)+x;kst.xp+=x;S.kr[dk()]=(S.kr[dk()]||0)+1;
   kshow=false;if(!kq.length)kmode='done';save();render();scrollTo(0,0)}
@@ -432,7 +432,7 @@ function vLeitura(){
   ${rec.length?`<div class="card"><h2>Registros recentes</h2>${rec.map(r=>{const b=S.books.find(x=>x.id===r.b);return `<div class="item"><div class="g"><b>${esc(b?b.t:'Leitura livre')}</b><small style="display:block">${fd(r.d)}${r.p?' · '+r.p+' pág.':''}</small></div><b>${r.m} min</b><button class="x" aria-label="Apagar" onclick="del('rd','${r.id}')">×</button></div>`}).join('')}</div>`:''}`}
 
 /* ===== HUB DO ESTUDO ===== */
-const SPAGES={c:['Cronômetro','⏱️'],f:['Foco total','🎯'],k:['Cartões','🃏'],r:['Revisões','🔁'],q:['Questões','✍️'],l:['Leitura','📖'],t:['Tempo estudado','📊'],p:['Provas','🗓️'],m:['Matérias','📚']};
+const SPAGES={c:['Cronômetro','⏱️'],f:['Foco total','🎯'],k:['Cartões','🃏'],r:['Revisões','🔁'],q:['Questões','✍️'],l:['Leitura','📖'],t:['Tempo estudado','📊'],p:['Provas','🗓️'],m:['Matérias','📚'],v:['Vila','🏘️']};
 function stab(k){ss=k;ssub='';MSG={};qa='';selk=-1;qi=-1;render();scrollTo(0,0)}
 let ssub='';
 function runLabel(){const t=S.timer,m=mat(t.mid),tp=tpc(t.mid,t.tid);return(m?m.name:'Estudo')+(tp?' · '+tp.name:'')}
@@ -450,12 +450,13 @@ function vHub(){
     ${bar(pct(ds.M[0].v,ds.dg))}
     <button class="btn kgo" onclick="stab('c')">${run?(t.run?'● Continuar ':'❚❚ Retomar ')+clock(elapsed()):'▶ Começar a estudar'}</button>
     <small style="display:block;margin-top:8px">${ds.M[0].ok?'✓ Meta de estudo batida.':'Não cumprir custa −'+ds.perMiss(ds.M[0])+' XP.'} ${hj?'· '+hj+' cartões hoje':''}</small></div>
+  ${vilaCard()}
   <h2 class="sec">Estudar</h2><div class="tiles">${tl('⏱️','Cronômetro',run?clock(elapsed()):'registre seu tempo',"stab('c')")}${tl('🎯','Foco total','sessão guiada',"stab('f')")}${tl('🃏','Cartões',kd?kd+' para revisar':'Anki por matéria',"stab('k')",kd)}${tl('🔁','Revisões',rv?rv+' para hoje':'em dia',"stab('r')",rv)}</div>
   <h2 class="sec">Praticar</h2><div class="tiles">${tl('✍️','Questões',ds.M[1].v?ds.M[1].v+' hoje':'acertos e erros',"stab('q')")}${tl('📝','Caderno de erros','salvar questão errada',"kGo('add','e')")}${tl('📖','Leitura',rg?rd+' / '+rg.g+' min hoje':'livros e páginas',"stab('l')")}</div>
-  <h2 class="sec">Acompanhar</h2><div class="tiles">${tl('📊','Tempo','gráficos por matéria',"stab('t')")}${tl('🗓️','Provas',ne?'próxima em '+left(ne.d)+' d':'datas das provas',"stab('p')")}${tl('📚','Matérias',S.mats.length+' cadastradas',"stab('m')")}</div>`}
+  <h2 class="sec">Acompanhar</h2><div class="tiles">${tl('📊','Tempo','gráficos por matéria',"stab('t')")}${tl('🗓️','Provas',ne?'próxima em '+left(ne.d)+' d':'datas das provas',"stab('p')")}${tl('📚','Matérias',S.mats.length+' cadastradas',"stab('m')")}${tl('🏘️','Vila','cresce com o estudo',"stab('v')")}</div>`}
 V.study=function(){
   if(!SPAGES[ss])ss='h';if(ss==='h')return vHub();
   const t=S.timer,run=t.run||t.acc>0,pg=SPAGES[ss],due=revList().due.length,kd=kdue().length,bd=ss==='r'?due:ss==='k'?kd:0;
   const bar_=`<div class="sbar"><button class="back" onclick="stab('h')">‹ Estudo</button><b>${pg[1]} ${pg[0]}</b>${bd?`<span class="bdg">${bd}</span>`:''}</div>`;
   const ban=run&&ss!=='c'?`<button class="runb" onclick="stab('c')"><span>${t.run?'●':'❚❚'}</span><b class="clk">${clock(elapsed())}</b><span class="lb">${esc(runLabel())}</span><span>Abrir ›</span></button>`:'';
-  return bar_+ban+splitPage(ss,({t:vTempo,c:vCron,q:vQuest,k:vCards,r:vRev,m:vMats,p:vProvas,f:vFoco,l:vLeitura}[ss])())};
+  return bar_+ban+splitPage(ss,({t:vTempo,c:vCron,q:vQuest,k:vCards,r:vRev,m:vMats,p:vProvas,f:vFoco,l:vLeitura,v:vVilaPage}[ss])())};
